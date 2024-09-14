@@ -42,7 +42,7 @@ export class CreatePollResDto {
 export class GetActivePollResDto {
   id: number;
   question: string;
-  options: PollOption[];
+  options: string[];
   timeLimit: number;
 }
 
@@ -59,4 +59,5 @@ export class PollStatDto {
 
 export class PollResultResDto {
   stat: PollStatDto[];
+  question: string;
 }

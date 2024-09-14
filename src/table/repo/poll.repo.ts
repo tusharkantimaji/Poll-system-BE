@@ -12,6 +12,10 @@ export class PollRepo {
     return this.repo.findOne({ where: { isActive: true } });
   }
 
+  public async getActivePolls(): Promise<Poll[]> {
+    return this.repo.findAll({ where: { isActive: true } });
+  }
+
   public async deletePoll(): Promise<void> {
     await this.repo.destroy({ where: { isActive: true } });
   }

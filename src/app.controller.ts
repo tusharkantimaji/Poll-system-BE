@@ -77,9 +77,11 @@ export class AppController {
     return await this.appService.deactivatePoll(pollId);
   }
 
-  @Get('active-poll')
-  public async getActivePoll(): Promise<GetActivePollResDto> {
-    return await this.appService.getActivePoll();
+  @Get('active-poll/:id')
+  public async getActivePoll(
+    @Param('id', ParseIntPipe) studentId: number,
+  ): Promise<GetActivePollResDto> {
+    return await this.appService.getActivePoll(studentId);
   }
 
   @Post('submit-poll')

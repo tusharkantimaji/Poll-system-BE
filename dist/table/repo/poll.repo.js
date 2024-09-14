@@ -25,6 +25,9 @@ let PollRepo = class PollRepo {
     async getActivePoll() {
         return this.repo.findOne({ where: { isActive: true } });
     }
+    async getActivePolls() {
+        return this.repo.findAll({ where: { isActive: true } });
+    }
     async deletePoll() {
         await this.repo.destroy({ where: { isActive: true } });
     }

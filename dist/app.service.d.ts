@@ -15,8 +15,8 @@ export declare class AppService {
     kickOutStudents(studentId: number): Promise<void>;
     createStudent(body: CreateStudentReqDto): Promise<CreateStudentResDto>;
     createPoll(body: CreatePollReqDto): Promise<CreatePollResDto>;
-    deactivatePoll(): Promise<CreatePollResDto>;
-    getActivePoll(): Promise<GetActivePollResDto>;
+    deactivatePoll(pollId: number): Promise<CreatePollResDto>;
+    getActivePoll(studentId: number): Promise<GetActivePollResDto>;
     submitPoll(body: SubmitPollReqDto): Promise<void>;
     getPollResult(pollId: number): Promise<PollResultResDto>;
 }

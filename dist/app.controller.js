@@ -38,11 +38,11 @@ let AppController = class AppController {
     async createPoll(body) {
         return await this.appService.createPoll(body);
     }
-    async deactivatePoll() {
-        return await this.appService.deactivatePoll();
+    async deactivatePoll(pollId) {
+        return await this.appService.deactivatePoll(pollId);
     }
-    async getActivePoll() {
-        return await this.appService.getActivePoll();
+    async getActivePoll(studentId) {
+        return await this.appService.getActivePoll(studentId);
     }
     async submitPoll(body) {
         return await this.appService.submitPoll(body);
@@ -93,15 +93,17 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "createPoll", null);
 __decorate([
-    (0, common_1.Delete)('poll'),
+    (0, common_1.Delete)('poll/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "deactivatePoll", null);
 __decorate([
-    (0, common_1.Get)('active-poll'),
+    (0, common_1.Get)('active-poll/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "getActivePoll", null);
 __decorate([

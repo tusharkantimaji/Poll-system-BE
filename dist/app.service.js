@@ -59,10 +59,6 @@ let AppService = class AppService {
         return { id: newStudent.id };
     }
     async createPoll(body) {
-        const activePoll = await this.pollRepo.getActivePoll();
-        if (activePoll) {
-            throw new common_1.ForbiddenException('There is already an active poll. Please deactivate the current poll first.');
-        }
         const poll = await this.pollRepo.createPoll({
             question: body.question,
             options: body.options,
@@ -71,26 +67,33 @@ let AppService = class AppService {
         });
         return { id: poll.id };
     }
-    async deactivatePoll() {
-        const activePoll = await this.pollRepo.getActivePoll();
-        if (!activePoll) {
+    async deactivatePoll(pollId) {
+        const activePoll = await this.pollRepo.getPollById(pollId);
+        if (!activePoll || !activePoll.isActive) {
             throw new common_1.ForbiddenException('There is no active poll.');
         }
         activePoll.isActive = false;
         await activePoll.save();
         return { id: activePoll.id };
     }
-    async getActivePoll() {
-        const activePoll = await this.pollRepo.getActivePoll();
-        if (!activePoll) {
+    async getActivePoll(studentId) {
+        const activePolls = await this.pollRepo.getActivePolls();
+        if (activePolls.length === 0) {
             throw new common_1.ForbiddenException('There is no active poll.');
         }
-        return {
-            id: activePoll.id,
-            question: activePoll.question,
-            options: activePoll.options,
-            timeLimit: activePoll.timeLimit,
-        };
+        for (const activePoll of activePolls) {
+            const answer = await this.answerRepo.getByStudentAndPollId(studentId, activePoll.id);
+            if (answer) {
+                continue;
+            }
+            return {
+                id: activePoll.id,
+                question: activePoll.question,
+                options: activePoll.options.map((option) => option.option),
+                timeLimit: activePoll.timeLimit,
+            };
+        }
+        throw new common_1.ForbiddenException('There is no active poll.');
     }
     async submitPoll(body) {
         const poll = await this.pollRepo.getPollById(body.pollId);
@@ -128,6 +131,7 @@ let AppService = class AppService {
         });
         return {
             stat: pollStats,
+            question: poll.question,
         };
     }
 };

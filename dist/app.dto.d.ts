@@ -33,7 +33,7 @@ export declare class CreatePollResDto {
 export declare class GetActivePollResDto {
     id: number;
     question: string;
-    options: PollOption[];
+    options: string[];
     timeLimit: number;
 }
 export declare class SubmitPollReqDto {
@@ -47,4 +47,5 @@ export declare class PollStatDto {
 }
 export declare class PollResultResDto {
     stat: PollStatDto[];
+    question: string;
 }

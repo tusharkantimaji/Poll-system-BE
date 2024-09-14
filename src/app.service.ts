@@ -109,18 +109,31 @@ export class AppService {
     return { id: activePoll.id };
   }
 
-  public async getActivePoll(): Promise<GetActivePollResDto> {
-    const activePoll = await this.pollRepo.getActivePoll();
-    if (!activePoll) {
+  public async getActivePoll(studentId: number): Promise<GetActivePollResDto> {
+    const activePolls = await this.pollRepo.getActivePolls();
+    if (activePolls.length === 0) {
       throw new ForbiddenException('There is no active poll.');
     }
 
-    return {
-      id: activePoll.id,
-      question: activePoll.question,
-      options: activePoll.options,
-      timeLimit: activePoll.timeLimit,
-    };
+    for (const activePoll of activePolls) {
+      const answer = await this.answerRepo.getByStudentAndPollId(
+        studentId,
+        activePoll.id,
+      );
+
+      if (answer) {
+        continue;
+      }
+
+      return {
+        id: activePoll.id,
+        question: activePoll.question,
+        options: activePoll.options.map((option) => option.option),
+        timeLimit: activePoll.timeLimit,
+      };
+    }
+
+    throw new ForbiddenException('There is no active poll.');
   }
 
   public async submitPoll(body: SubmitPollReqDto): Promise<void> {
@@ -169,6 +182,7 @@ export class AppService {
 
     return {
       stat: pollStats,
+      question: poll.question,
     };
   }
 }
