@@ -32,6 +32,24 @@
 $ npm install
 ```
 
+Create a local database with this Cred
+```bash
+dialect: 'postgres',
+      host: '127.0.0.1',
+      database: 'poll_sys',
+      username: 'postgres',
+      password: 'postgres',
+      timezone: '+05:30',
+      autoLoadModels: true,
+      synchronize: false,
+```
+
+Migration Run
+```bash
+npx sequelize-cli db:migrate
+```
+
+
 ## Compile and run the project
 
 ```bash
