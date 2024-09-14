@@ -49,7 +49,7 @@ export class GetActivePollResDto {
 export class SubmitPollReqDto {
   studentId: number;
   pollId: number;
-  selectedOption: number;
+  answer: number;
 }
 
 export class PollStatDto {

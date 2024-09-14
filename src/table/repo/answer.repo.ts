@@ -11,4 +11,11 @@ export class AnswerRepo {
   public async getByPollId(pollId: number): Promise<Answer[]> {
     return this.repo.findAll({ where: { pollId } });
   }
+
+  public async getByStudentAndPollId(
+    studentId: number,
+    pollId: number,
+  ): Promise<Answer> {
+    return this.repo.findOne({ where: { studentId, pollId } });
+  }
 }

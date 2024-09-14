@@ -96,7 +96,9 @@ export class AppService {
 
     const poll = await this.pollRepo.createPoll({
       question: body.question,
+      options: body.options,
       timeLimit: body.timeLimit,
+      isActive: true,
     });
 
     return { id: poll.id };
@@ -131,15 +133,19 @@ export class AppService {
   public async submitPoll(body: SubmitPollReqDto): Promise<void> {
     const poll = await this.pollRepo.getPollById(body.pollId);
     const student = await this.studentRepo.getStudentById(body.studentId);
+    const answer = await this.answerRepo.getByStudentAndPollId(
+      student.id,
+      poll.id,
+    );
 
-    if (!poll || !student) {
-      throw new ForbiddenException('Poll or student not found.');
+    if (!poll || !student || student.isKickedOut || !poll.isActive || answer) {
+      throw new ForbiddenException('Not a valid request');
     }
 
     await this.answerRepo.createAnswer({
       studentId: body.studentId,
       pollId: body.pollId,
-      answer: body.selectedOption,
+      answer: body.answer,
     });
   }
 
