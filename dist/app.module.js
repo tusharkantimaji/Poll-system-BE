@@ -10,12 +10,24 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const sequelize_1 = require("@nestjs/sequelize");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [],
+        imports: [
+            sequelize_1.SequelizeModule.forRoot({
+                dialect: 'postgres',
+                host: '127.0.0.1',
+                database: 'poll_sys',
+                username: 'postgres',
+                password: 'postgres',
+                timezone: '+05:30',
+                autoLoadModels: true,
+                synchronize: false,
+            }),
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })
