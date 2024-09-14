@@ -35,6 +35,21 @@ let AppController = class AppController {
     async addStudent(body) {
         return this.appService.createStudent(body);
     }
+    async createPoll(body) {
+        return await this.appService.createPoll(body);
+    }
+    async deactivatePoll() {
+        return await this.appService.deactivatePoll();
+    }
+    async getActivePoll() {
+        return await this.appService.getActivePoll();
+    }
+    async submitPoll(body) {
+        return await this.appService.submitPoll(body);
+    }
+    async getPollResult(pollId) {
+        return await this.appService.getPollResult(pollId);
+    }
 };
 exports.AppController = AppController;
 __decorate([
@@ -51,7 +66,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "deleteTeacher", null);
 __decorate([
-    (0, common_1.Get)('student'),
+    (0, common_1.Get)('all-student'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -70,6 +85,39 @@ __decorate([
     __metadata("design:paramtypes", [app_dto_1.CreateStudentReqDto]),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "addStudent", null);
+__decorate([
+    (0, common_1.Post)('poll'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [app_dto_1.CreatePollReqDto]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "createPoll", null);
+__decorate([
+    (0, common_1.Delete)('poll'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "deactivatePoll", null);
+__decorate([
+    (0, common_1.Get)('active-poll'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "getActivePoll", null);
+__decorate([
+    (0, common_1.Post)('submit-poll'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [app_dto_1.SubmitPollReqDto]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "submitPoll", null);
+__decorate([
+    (0, common_1.Get)('poll-result/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "getPollResult", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

@@ -12,29 +12,23 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StudentRepo = void 0;
+exports.AnswerRepo = void 0;
 const sequelize_1 = require("@nestjs/sequelize");
-const student_model_1 = require("../model/student.model");
-let StudentRepo = class StudentRepo {
+const answer_model_1 = require("../model/answer.model");
+let AnswerRepo = class AnswerRepo {
     constructor(repo) {
         this.repo = repo;
     }
-    async createStudent(student) {
-        return this.repo.create(student, { returning: true });
+    async createAnswer(answer) {
+        return this.repo.create(answer, { returning: true });
     }
-    async getAllStudents() {
-        return this.repo.findAll();
-    }
-    async kickOutStudent(studentId) {
-        await this.repo.update({ isKickedOut: true }, { where: { id: studentId } });
-    }
-    async getStudentById(studentId) {
-        return this.repo.findAll({ where: { id: studentId } });
+    async getByPollId(pollId) {
+        return this.repo.findAll({ where: { pollId } });
     }
 };
-exports.StudentRepo = StudentRepo;
-exports.StudentRepo = StudentRepo = __decorate([
-    __param(0, (0, sequelize_1.InjectModel)(student_model_1.Student)),
+exports.AnswerRepo = AnswerRepo;
+exports.AnswerRepo = AnswerRepo = __decorate([
+    __param(0, (0, sequelize_1.InjectModel)(answer_model_1.Answer)),
     __metadata("design:paramtypes", [Object])
-], StudentRepo);
-//# sourceMappingURL=student.repo.js.map
+], AnswerRepo);
+//# sourceMappingURL=answer.repo.js.map

@@ -1,21 +1,30 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import {
+  CreatePollReqDto,
+  CreatePollResDto,
   CreateStudentReqDto,
   CreateStudentResDto,
   CreateTeacherReqDto,
   CreateTeacherResDto,
+  GetActivePollResDto,
   GetListOfStudentsResDto,
+  PollResultResDto,
   StudentInfoDto,
+  SubmitPollReqDto,
 } from './app.dto';
 import { TeacherRepo } from './table/repo/teacher.repo';
 import { Student } from './table/model/student.model';
 import { StudentRepo } from './table/repo/student.repo';
+import { PollRepo } from './table/repo/poll.repo';
+import { AnswerRepo } from './table/repo/answer.repo';
 
 @Injectable()
 export class AppService {
   constructor(
     private readonly teacherRepo: TeacherRepo,
     private readonly studentRepo: StudentRepo,
+    private readonly pollRepo: PollRepo,
+    private readonly answerRepo: AnswerRepo,
   ) {}
 
   // ----------------------------- Teacher Activity ---------------------------------
@@ -73,5 +82,94 @@ export class AppService {
     const newStudent = await this.studentRepo.createStudent(student);
 
     return { id: newStudent.id };
+  }
+
+  // ----------------------------- Poll Activity ---------------------------------
+
+  public async createPoll(body: CreatePollReqDto): Promise<CreatePollResDto> {
+    const activePoll = await this.pollRepo.getActivePoll();
+    if (activePoll) {
+      throw new ForbiddenException(
+        'There is already an active poll. Please deactivate the current poll first.',
+      );
+    }
+
+    const poll = await this.pollRepo.createPoll({
+      question: body.question,
+      timeLimit: body.timeLimit,
+    });
+
+    return { id: poll.id };
+  }
+
+  public async deactivatePoll(): Promise<CreatePollResDto> {
+    const activePoll = await this.pollRepo.getActivePoll();
+    if (!activePoll) {
+      throw new ForbiddenException('There is no active poll.');
+    }
+
+    activePoll.isActive = false;
+    await activePoll.save();
+
+    return { id: activePoll.id };
+  }
+
+  public async getActivePoll(): Promise<GetActivePollResDto> {
+    const activePoll = await this.pollRepo.getActivePoll();
+    if (!activePoll) {
+      throw new ForbiddenException('There is no active poll.');
+    }
+
+    return {
+      id: activePoll.id,
+      question: activePoll.question,
+      options: activePoll.options,
+      timeLimit: activePoll.timeLimit,
+    };
+  }
+
+  public async submitPoll(body: SubmitPollReqDto): Promise<void> {
+    const poll = await this.pollRepo.getPollById(body.pollId);
+    const student = await this.studentRepo.getStudentById(body.studentId);
+
+    if (!poll || !student) {
+      throw new ForbiddenException('Poll or student not found.');
+    }
+
+    await this.answerRepo.createAnswer({
+      studentId: body.studentId,
+      pollId: body.pollId,
+      answer: body.selectedOption,
+    });
+  }
+
+  public async getPollResult(pollId: number): Promise<PollResultResDto> {
+    const poll = await this.pollRepo.getPollById(pollId);
+    if (!poll) {
+      throw new ForbiddenException('Poll not found.');
+    }
+
+    const answers = await this.answerRepo.getByPollId(pollId);
+
+    const result = answers.reduce((acc, answer) => {
+      if (!acc[answer.answer]) {
+        acc[answer.answer] = 1;
+      } else {
+        acc[answer.answer]++;
+      }
+
+      return acc;
+    }, {});
+
+    const pollStats = Object.keys(result).map((key) => {
+      return {
+        option: poll.options[key].option,
+        count: result[key],
+      };
+    });
+
+    return {
+      stat: pollStats,
+    };
   }
 }

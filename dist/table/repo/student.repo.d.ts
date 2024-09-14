@@ -5,4 +5,5 @@ export declare class StudentRepo {
     createStudent(student: Partial<Student>): Promise<Student>;
     getAllStudents(): Promise<Student[]>;
     kickOutStudent(studentId: number): Promise<void>;
+    getStudentById(studentId: number): Promise<Student[]>;
 }

@@ -15,4 +15,8 @@ export class StudentRepo {
   public async kickOutStudent(studentId: number): Promise<void> {
     await this.repo.update({ isKickedOut: true }, { where: { id: studentId } });
   }
+
+  public async getStudentById(studentId: number): Promise<Student[]> {
+    return this.repo.findAll({ where: { id: studentId } });
+  }
 }

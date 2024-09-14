@@ -13,8 +13,12 @@ const teacher_model_1 = require("./model/teacher.model");
 const student_model_1 = require("./model/student.model");
 const teacher_repo_1 = require("./repo/teacher.repo");
 const student_repo_1 = require("./repo/student.repo");
-const models = [teacher_model_1.Teacher, student_model_1.Student];
-const repositories = [teacher_repo_1.TeacherRepo, student_repo_1.StudentRepo];
+const poll_model_1 = require("./model/poll.model");
+const poll_repo_1 = require("./repo/poll.repo");
+const answer_repo_1 = require("./repo/answer.repo");
+const answer_model_1 = require("./model/answer.model");
+const models = [teacher_model_1.Teacher, student_model_1.Student, poll_model_1.Poll, answer_model_1.Answer];
+const repositories = [teacher_repo_1.TeacherRepo, student_repo_1.StudentRepo, poll_repo_1.PollRepo, answer_repo_1.AnswerRepo];
 let TableModule = class TableModule {
 };
 exports.TableModule = TableModule;
@@ -26,4 +30,4 @@ exports.TableModule = TableModule = __decorate([
         exports: repositories,
     })
 ], TableModule);
-//# sourceMappingURL=modle.js.map
+//# sourceMappingURL=module.js.map
