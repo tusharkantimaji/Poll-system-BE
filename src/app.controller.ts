@@ -70,9 +70,11 @@ export class AppController {
     return await this.appService.createPoll(body);
   }
 
-  @Delete('poll')
-  public async deactivatePoll(): Promise<CreatePollResDto> {
-    return await this.appService.deactivatePoll();
+  @Delete('poll/:id')
+  public async deactivatePoll(
+    @Param('id', ParseIntPipe) pollId: number,
+  ): Promise<CreatePollResDto> {
+    return await this.appService.deactivatePoll(pollId);
   }
 
   @Get('active-poll')

@@ -87,13 +87,6 @@ export class AppService {
   // ----------------------------- Poll Activity ---------------------------------
 
   public async createPoll(body: CreatePollReqDto): Promise<CreatePollResDto> {
-    const activePoll = await this.pollRepo.getActivePoll();
-    if (activePoll) {
-      throw new ForbiddenException(
-        'There is already an active poll. Please deactivate the current poll first.',
-      );
-    }
-
     const poll = await this.pollRepo.createPoll({
       question: body.question,
       options: body.options,
@@ -104,9 +97,9 @@ export class AppService {
     return { id: poll.id };
   }
 
-  public async deactivatePoll(): Promise<CreatePollResDto> {
-    const activePoll = await this.pollRepo.getActivePoll();
-    if (!activePoll) {
+  public async deactivatePoll(pollId: number): Promise<CreatePollResDto> {
+    const activePoll = await this.pollRepo.getPollById(pollId);
+    if (!activePoll || !activePoll.isActive) {
       throw new ForbiddenException('There is no active poll.');
     }
 
